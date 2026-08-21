@@ -41,7 +41,7 @@
 - [x] 最终安装包内没有模型/统计 SDK、API Key、遥测端点或远程脚本。
 - [x] 隐私、权限、版权边界、非官方声明、卸载和安全反馈说明均可从安装包查阅。
 - [ ] 测试者明确知道这是 Beta，复杂排版可能变化，内容损失会在结果中提示。
-- [ ] 已确定公开支持入口；当前“通过原分享渠道反馈”只适用于小范围测试。
+- [x] 已确定公开支持入口：普通问题使用 GitHub Issues，安全漏洞使用 GitHub Private Vulnerability Reporting。
 
 ## P1：Windows 与 Edge 跨平台声明前
 
@@ -69,9 +69,9 @@ GitHub Actions 的 Windows 无界面 Chrome 会验证扩展加载、下载完成
 - [x] `CONTRIBUTING.md`、`SECURITY.md`、`NOTICE.md`、`TRADEMARKS.md` 和 Issue 模板齐备。
 - [x] `dist/`、`release/`、`node_modules/`、历史 ZIP 和本机缓存不进入源码版本控制。
 - [x] GitHub Actions 覆盖 Node 20 的 macOS、Windows、Linux 基础与浏览器测试，并单独复核可重复发布流程。
-- [ ] 建立独立 Git 仓库，确认提交身份，完成首个提交与 `v0.4.0-beta.1` 标签。
-- [ ] 启用 GitHub Private Vulnerability Reporting，并把仓库、支持和隐私网址写回商店资料。
-- [ ] 从全新公开克隆执行 `npm ci`、`npm test`、`npm run test:browser` 与 `npm run release`。
+- [x] 建立独立 Git 仓库，确认 GitHub noreply 提交身份，完成首个提交与 `v0.4.0-beta.1` 标签。
+- [x] 启用 GitHub Private Vulnerability Reporting，并把仓库、支持和隐私网址写入公开文档与扩展元数据。
+- [x] 从全新公开克隆执行 `npm ci`、`npm test`、`npm run test:browser` 与 `npm run release`，全部通过。
 
 ## 尚未验证的平台（不得写成已支持）
 
