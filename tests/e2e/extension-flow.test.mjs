@@ -62,18 +62,18 @@ async function launchExtension() {
   return { context, tempRoot, extensionId, trustedPage };
 }
 
-async function waitForCompletedHtmlDownloads(page, expectedCount, timeoutMs = 10_000) {
-  return page.evaluate(async ({ expectedCount, timeoutMs }) => {
+async function waitForCompletedHtmlDownload(page, downloadId, timeoutMs = 10_000) {
+  return page.evaluate(async ({ downloadId, timeoutMs }) => {
     const deadline = Date.now() + timeoutMs;
     while (true) {
-      const downloads = await chrome.downloads.search({});
-      const completed = downloads
-        .filter((item) => item.state === "complete" && /\.html$/i.test(item.filename || ""))
-        .map((item) => ({ id: item.id, filename: item.filename }));
-      if (completed.length === expectedCount || Date.now() >= deadline) return completed;
+      const [item] = await chrome.downloads.search({ id: downloadId });
+      if (item?.state === "complete" && /\.html$/i.test(item.filename || "")) {
+        return { id: item.id, filename: item.filename };
+      }
+      if (Date.now() >= deadline) return null;
       await new Promise((resolve) => setTimeout(resolve, 50));
     }
-  }, { expectedCount, timeoutMs });
+  }, { downloadId, timeoutMs });
 }
 
 async function startAndWait(page, article, timeoutMs = 20_000) {
@@ -123,10 +123,11 @@ test("最终 dist 经 MV3 后台生成可离线打开的 HTML", async () => {
     assert.equal(result.job.status, "success");
     assert.equal(result.job.failedImages, 0);
     assert.equal(result.job.contentLossCount, 0);
+    assert.equal(Number.isInteger(result.job.downloadId), true);
 
-    const downloads = await waitForCompletedHtmlDownloads(trustedPage, 1);
-    assert.equal(downloads.length, 1);
-    const html = await readFile(downloads[0].filename, "utf8");
+    const download = await waitForCompletedHtmlDownload(trustedPage, result.job.downloadId);
+    assert.ok(download);
+    const html = await readFile(download.filename, "utf8");
     assert.match(html, /最终发布包完整链路测试/);
     assert.match(html, /这段文字必须真实写入下载文件/);
     assert.match(html, /Content-Security-Policy/);
@@ -146,7 +147,7 @@ test("最终 dist 经 MV3 后台生成可离线打开的 HTML", async () => {
       page.on("request", (request) => {
         if (!request.url().startsWith("file:")) requests.push(request.url());
       });
-      await page.goto(pathToFileURL(downloads[0].filename).href);
+      await page.goto(pathToFileURL(download.filename).href);
       await page.getByRole("heading", { name: "最终发布包完整链路测试" }).waitFor();
       assert.deepEqual(requests, []);
       await offlineContext.close();
@@ -183,10 +184,11 @@ test("最终 dist 对图片缺失、互动内容和结构损失只给出部分�
     assert.equal(result.job.failedImages, 1);
     assert.equal(result.job.unsupportedMediaCount, 1);
     assert.equal(result.job.contentLossCount, 1);
+    assert.equal(Number.isInteger(result.job.downloadId), true);
 
-    const downloads = await waitForCompletedHtmlDownloads(trustedPage, 1);
-    assert.equal(downloads.length, 1);
-    const html = await readFile(downloads[0].filename, "utf8");
+    const download = await waitForCompletedHtmlDownload(trustedPage, result.job.downloadId);
+    assert.ok(download);
+    const html = await readFile(download.filename, "utf8");
     assert.match(html, /正文仍然保留/);
     assert.match(html, /未能离线保存/);
     assert.match(html, /互动组件未纳入离线文件/);
@@ -263,12 +265,14 @@ test("最终 dist 的取消与单任务锁不会留下错误成品", async () =>
     assert.equal(result.concurrent.error.code, "SL-JOB-BUSY");
     assert.equal(result.cancelled.ok, true);
     assert.equal(result.firstJob.status, "cancelled");
+    assert.equal(result.firstJob.downloadId, null);
     assert.equal(result.second.ok, true);
     assert.equal(result.secondJob.status, "success");
+    assert.equal(Number.isInteger(result.secondJob.downloadId), true);
 
-    const downloads = await waitForCompletedHtmlDownloads(trustedPage, 1);
-    assert.equal(downloads.length, 1, "取消的文章不得留下 HTML");
-    const html = await readFile(downloads[0].filename, "utf8");
+    const download = await waitForCompletedHtmlDownload(trustedPage, result.secondJob.downloadId);
+    assert.ok(download, "下一篇文章必须完成下载");
+    const html = await readFile(download.filename, "utf8");
     assert.match(html, /下一篇必须能够正常保存/);
     assert.doesNotMatch(html, /取消竞态测试/);
   } finally {
