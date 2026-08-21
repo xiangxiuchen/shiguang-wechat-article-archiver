@@ -41,7 +41,10 @@ export function resolveChromiumExecutable() {
           ]
         : process.platform === "win32"
           ? [path.join(base, "chrome-win64/chrome.exe"), path.join(base, "chrome-win/chrome.exe")]
-          : [path.join(base, "chrome-linux/chrome")];
+          : [
+              path.join(base, "chrome-linux64/chrome"),
+              path.join(base, "chrome-linux/chrome")
+            ];
       const cached = cachedCandidates.find((candidate) => existsSync(candidate));
       if (cached) return cached;
     }

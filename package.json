@@ -14,9 +14,9 @@
     "url": "https://github.com/xiangxiuchen/shiguang-wechat-article-archiver/issues"
   },
   "scripts": {
-    "test": "node --test tests/unit/*.test.mjs tests/contract/*.test.mjs",
-    "test:browser": "npm run build && node --test --test-concurrency=1 tests/browser/*.test.mjs tests/e2e/*.test.mjs",
-    "test:release": "node --test tests/release/*.test.mjs",
+    "test": "node tools/test.mjs unit contract",
+    "test:browser": "npm run build && node tools/test.mjs --concurrency=1 browser e2e",
+    "test:release": "node tools/test.mjs release",
     "check:version": "node tools/version.mjs",
     "build": "node tools/build.mjs",
     "release": "node tools/release.mjs"

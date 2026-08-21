@@ -54,7 +54,9 @@ async function launchExtension() {
     downloadPath: downloadDir,
     eventsEnabled: true
   });
-  const worker = context.serviceWorkers()[0] || await context.waitForEvent("serviceworker");
+  const worker = context.serviceWorkers()[0] || await context.waitForEvent("serviceworker", {
+    timeout: 15_000
+  });
   const extensionId = new URL(worker.url()).hostname;
   const trustedPage = await context.newPage();
   await trustedPage.goto(`chrome-extension://${extensionId}/pages/privacy.html`);
