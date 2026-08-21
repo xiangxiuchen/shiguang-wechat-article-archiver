@@ -1,0 +1,31 @@
+name: 功能建议
+description: 提交与单篇、本地、公开文章存档直接相关的建议
+title: "[建议] "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: 你遇到的具体问题
+      description: 请描述任务和阻力，不要只写功能名称。
+    validations:
+      required: true
+  - type: textarea
+    id: current
+    attributes:
+      label: 你现在怎么解决
+  - type: textarea
+    id: expected
+    attributes:
+      label: 希望的改进
+    validations:
+      required: true
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: 范围确认
+      options:
+        - label: 建议不依赖绕过登录、付费、访问控制或批量抓取受保护内容。
+          required: true
+        - label: 我不会提交未授权文章、账号、Cookie、访问令牌或个人信息。
+          required: true

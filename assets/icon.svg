@@ -1,0 +1,10 @@
+<!-- SPDX-License-Identifier: MPL-2.0 -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title">
+  <title id="title">拾光存档</title>
+  <rect width="128" height="128" rx="28" fill="#F7F4EE"/>
+  <path d="M34 38.5c0-6.35 5.15-11.5 11.5-11.5h20.7c3.45 0 6.73 1.55 8.92 4.22l6.76 8.26A11.5 11.5 0 0 0 90.78 43H93.5c6.35 0 11.5 5.15 11.5 11.5v33C105 94.4 99.4 100 92.5 100h-57C28.6 100 23 94.4 23 87.5v-37C23 43.6 28.6 38 35.5 38H34Z" fill="#D7BE7B" opacity=".58"/>
+  <path d="M24 54h80v34c0 6.63-5.37 12-12 12H36c-6.63 0-12-5.37-12-12V54Z" fill="#1F5A47"/>
+  <path d="M53 68h22M53 78h30M53 88h19" fill="none" stroke="#F7F4EE" stroke-width="5" stroke-linecap="round"/>
+  <path d="M41.5 66v24" fill="none" stroke="#D7BE7B" stroke-width="4" stroke-linecap="round"/>
+  <path d="M41.5 70c-7-3.5-8.8-9.2-8.8-13.5 6.6.8 10.2 4.7 8.8 13.5Zm0 7c6.9-3.4 11.2-1.8 14.2.8-4.2 5.1-9.4 6.2-14.2-.8Z" fill="#D7BE7B"/>
+</svg>

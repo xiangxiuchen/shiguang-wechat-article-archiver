@@ -1,0 +1,143 @@
+<!doctype html>
+<!-- SPDX-License-Identifier: MPL-2.0 -->
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>拾光存档</title>
+  <link rel="stylesheet" href="./popup.css">
+</head>
+<body>
+  <main class="popup-shell">
+    <header class="brand-row">
+      <div class="brand-lockup">
+        <svg class="brand-sprig" viewBox="0 0 40 48" aria-hidden="true">
+          <path d="M20 45C18 31 22 17 31 4M20 34C12 33 7 28 5 22c8-1 14 2 16 8M23 25c7-1 12-5 14-11-7-1-12 2-15 7M27 15c-4-3-5-8-4-13 5 2 8 6 7 11"/>
+        </svg>
+        <span>拾光存档</span>
+      </div>
+      <div class="header-actions">
+        <button class="icon-button" id="helpButton" type="button" aria-label="使用说明" title="使用说明">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.8 9a2.5 2.5 0 1 1 3.7 2.2c-1 .6-1.5 1.1-1.5 2.3M12 17h.01"/></svg>
+        </button>
+        <button class="icon-button" id="closeButton" type="button" aria-label="关闭" title="关闭">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="botanical-rule" aria-hidden="true"><span></span><i></i><span></span></div>
+
+    <section class="state state--center" data-state="detecting" aria-live="polite">
+      <div class="line-loader" aria-hidden="true"></div>
+      <h1>正在检测当前页面…</h1>
+      <p>请稍候，我们只读取你当前主动打开的页面。</p>
+    </section>
+
+    <section class="state" data-state="unsupported" hidden aria-live="polite">
+      <div class="state-icon state-icon--outline" aria-hidden="true">
+        <svg viewBox="0 0 48 48"><path d="M15 7h13l9 9v25H15z"/><path d="M28 7v10h9M20 25h12M20 31h8"/></svg>
+      </div>
+      <h1>请先打开一篇公开公众号文章</h1>
+      <p class="support-copy">目前仅支持 <strong>mp.weixin.qq.com</strong> 的公开单篇文章。</p>
+      <button class="button button--secondary" id="unsupportedHelpButton" type="button">查看使用说明</button>
+    </section>
+
+    <section class="state" data-state="ready" hidden aria-live="polite">
+      <div class="section-heading">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg>
+        <h1>检测到一篇公众号文章</h1>
+      </div>
+      <dl class="article-meta">
+        <div class="meta-row meta-row--title">
+          <dt>标题</dt>
+          <dd id="articleTitle">—</dd>
+        </div>
+        <div class="meta-row">
+          <dt>公众号</dt>
+          <dd id="articleAccount">—</dd>
+        </div>
+        <div class="meta-row">
+          <dt>发布时间</dt>
+          <dd id="articleDate">—</dd>
+        </div>
+        <div class="meta-row">
+          <dt>图片数量</dt>
+          <dd id="articleImageCount">0 张</dd>
+        </div>
+      </dl>
+      <div class="permission-notice" id="permissionNotice" hidden>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 4.5 6v5.5c0 4.5 3 7.7 7.5 9.5 4.5-1.8 7.5-5 7.5-9.5V6z"/><path d="m9 12 2 2 4-5"/></svg>
+        <p><strong>首次保存图片会询问授权</strong><span>选择“允许”才能把图片一起存到本地；拒绝也能继续保存正文。</span></p>
+      </div>
+      <button class="button button--primary" id="saveButton" type="button">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 20h14"/></svg>
+        保存当前文章
+      </button>
+      <p class="micro-copy">只处理当前文章，不会上传正文，也不会调用 AI。</p>
+    </section>
+
+    <section class="state state--center" data-state="saving" hidden aria-live="polite">
+      <div class="archive-illustration" aria-hidden="true">
+        <svg viewBox="0 0 96 80"><path d="M18 29h24l7 7h29v32H18z"/><path d="M29 17h35v12M38 9h30v18"/><path class="sprig" d="M68 69c4-11 9-18 18-24M73 60c8-1 12-5 14-10M78 53c-2-5-1-9 2-13"/></svg>
+      </div>
+      <h1 id="savingTitle">正在整理正文和图片…</h1>
+      <p id="savingMessage">请暂时保持文章标签页打开。</p>
+      <div class="progress-track" id="progressTrack" role="progressbar" aria-label="保存进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="10">
+        <span id="progressFill"></span>
+      </div>
+      <p class="progress-detail" id="progressDetail">正在整理正文</p>
+      <button class="button button--secondary" id="cancelButton" type="button">取消保存</button>
+    </section>
+
+    <section class="state" data-state="success" hidden aria-live="polite">
+      <div class="success-mark" aria-hidden="true">
+        <svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="25"/><path d="m20 33 8 8 17-19"/></svg>
+      </div>
+      <h1 class="centered" id="successTitle">已保存到下载文件夹</h1>
+      <p class="centered support-copy" id="successSummary">正文和图片已整理完成，可在本地查看。</p>
+      <dl class="result-box">
+        <div><dt>文件名</dt><dd id="savedFilename">—</dd></div>
+        <div><dt>图片</dt><dd id="savedImageCount">—</dd></div>
+      </dl>
+      <div class="button-row">
+        <button class="button button--primary" id="openDownloadButton" type="button">打开已保存文章</button>
+        <button class="button button--secondary" id="showDownloadButton" type="button">在文件夹中显示</button>
+      </div>
+      <p class="action-status" id="resultActionStatus" role="status" aria-live="polite"></p>
+      <div class="warning-box" id="partialWarning" hidden>
+        <strong id="partialWarningTitle">部分内容未能完整保留</strong>
+        <p id="partialWarningText">已用本地占位提示替代，不会在打开文件时偷偷联网。</p>
+      </div>
+    </section>
+
+    <section class="state" data-state="error" hidden aria-live="assertive">
+      <div class="state-icon state-icon--warning" aria-hidden="true">!</div>
+      <h1 id="errorTitle">这次没有保存成功</h1>
+      <p class="support-copy" id="errorMessage">请刷新文章页后重试。</p>
+      <p class="error-code" id="errorCode">错误编号：SL-1000</p>
+      <button class="button button--primary" id="retryButton" type="button">重新检测</button>
+    </section>
+
+    <footer class="popup-footer">
+      <div class="footer-tools">
+        <span id="versionLabel" aria-label="当前版本">v—</span>
+        <button id="feedbackButton" type="button">复制安全反馈</button>
+      </div>
+      <p class="feedback-status" id="feedbackStatus" role="status" aria-live="polite"></p>
+      <div class="trust-line">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 22c1-8 4-14 11-20M9 15c-5 0-7-3-7-6 5-1 8 1 8 5M13 10c4 0 7-2 9-6-4-1-7 0-9 4"/></svg>
+        <span>本机处理 · 反馈不含文章或链接 · 0 Token</span>
+      </div>
+    </footer>
+
+    <section class="manual-feedback-panel" id="manualFeedbackPanel" hidden aria-labelledby="manualFeedbackTitle">
+      <h2 id="manualFeedbackTitle">请手动复制安全反馈</h2>
+      <p>浏览器未允许自动写入剪贴板，可全选下方文本后复制。</p>
+      <textarea id="manualFeedbackText" rows="10" readonly aria-label="安全反馈文本"></textarea>
+      <button class="button button--secondary" id="closeManualFeedbackButton" type="button">返回</button>
+    </section>
+  </main>
+  <script type="module" src="./popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 安全漏洞私密报告
+    url: https://github.com/xiangxiuchen/拾光存档-微信文章下载器/security/advisories/new
+    about: 请勿在公开 Issue 中披露漏洞细节或真实用户数据。

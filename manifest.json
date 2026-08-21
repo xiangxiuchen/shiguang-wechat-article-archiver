@@ -1,0 +1,42 @@
+{
+  "manifest_version": 3,
+  "name": "拾光存档",
+  "short_name": "拾光存档",
+  "version": "0.4.0",
+  "description": "一键保存当前公开公众号文章，本地处理，不调用模型，0 Token。",
+  "homepage_url": "https://github.com/xiangxiuchen/拾光存档-微信文章下载器",
+  "minimum_chrome_version": "123",
+  "action": {
+    "default_title": "保存当前公众号文章",
+    "default_popup": "src/popup/popup.html",
+    "default_icon": {
+      "16": "assets/icon-16.png",
+      "32": "assets/icon-32.png",
+      "48": "assets/icon-48.png",
+      "128": "assets/icon-128.png"
+    }
+  },
+  "background": {
+    "service_worker": "src/background/service-worker.js",
+    "type": "module"
+  },
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "downloads",
+    "downloads.open",
+    "offscreen"
+  ],
+  "optional_host_permissions": [
+    "https://mmbiz.qpic.cn/*"
+  ],
+  "icons": {
+    "16": "assets/icon-16.png",
+    "32": "assets/icon-32.png",
+    "48": "assets/icon-48.png",
+    "128": "assets/icon-128.png"
+  },
+  "content_security_policy": {
+    "extension_pages": "default-src 'self'; script-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; frame-src 'none'; child-src 'none'; style-src 'self'; img-src 'self' data: blob:; connect-src https://mmbiz.qpic.cn; font-src 'none'; media-src 'none'; form-action 'none'; frame-ancestors 'none';"
+  }
+}

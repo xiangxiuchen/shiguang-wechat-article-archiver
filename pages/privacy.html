@@ -1,0 +1,58 @@
+<!doctype html>
+<!-- SPDX-License-Identifier: MPL-2.0 -->
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>拾光存档 · 隐私与权限说明</title>
+  <link rel="stylesheet" href="./welcome.css">
+</head>
+<body>
+  <main class="welcome-shell document-page">
+    <header>
+      <h1>隐私与权限说明</h1>
+      <p>适用于拾光存档 0.4.0 开源测试版</p>
+    </header>
+    <section>
+      <h2>我们不收集什么</h2>
+      <ul>
+        <li>不收集账号、Cookie、聊天记录或公众号后台数据。</li>
+        <li>不上传文章正文、图片、网址或下载记录给开发者。</li>
+        <li>不包含统计分析、广告、遥测、模型 SDK 或开发者服务器。</li>
+        <li>不调用任何 AI 模型，因此基础保存功能为 0 Token。</li>
+      </ul>
+    </section>
+    <section>
+      <h2>为什么需要这些权限</h2>
+      <ul>
+        <li><strong>当前标签页：</strong>仅在你点击扩展后读取当前公开文章。</li>
+        <li><strong>脚本执行：</strong>把本地提取器临时放进当前文章页，不长期注入。</li>
+        <li><strong>微信图片域名：</strong>经你首次确认后，下载文章中的公开原图。</li>
+        <li><strong>下载：</strong>把生成的离线 HTML 交给浏览器下载，不覆盖旧文件。</li>
+        <li><strong>打开下载：</strong>只在你点击“打开已保存文章”时，让浏览器打开这一个已完成的本地文件。</li>
+        <li><strong>离屏处理：</strong>即使弹窗暂时关闭，也能继续在本机整理文件。</li>
+      </ul>
+    </section>
+    <section>
+      <h2>网络范围</h2>
+      <p>扩展自身只允许连接微信文章图片域名 <code>mmbiz.qpic.cn</code>。正文直接来自你当前打开的页面；图片失败时使用本地占位提示，不回退到远程图片。</p>
+    </section>
+    <section>
+      <h2>删除与卸载</h2>
+      <p>你可以随时在浏览器扩展管理页移除拾光存档。扩展卸载不会自动删除你已经保存到下载文件夹的文章。</p>
+    </section>
+    <section>
+      <h2>问题反馈与诊断信息</h2>
+      <p>项目没有自动错误上报。普通问题可通过项目 GitHub Issues 反馈；安全漏洞请按项目安全政策使用私密漏洞报告。</p>
+      <p>弹窗的“复制安全反馈”只在本机生成并写入剪贴板，不会自动发送。内容只包含版本、平台、浏览器主版本、状态、阶段、错误编号及计数；不包含文章标题、公众号、正文、完整网址、Cookie、文件名或任务标识。</p>
+    </section>
+    <section>
+      <h2>使用边界</h2>
+      <p>请仅保存你有权访问和备份的内容。工具不会替你取得转载或商业使用授权，文章与图片的权利仍归原权利人。</p>
+    </section>
+    <footer>
+      <p>拾光存档是独立开发者工具，与微信及腾讯不存在隶属、合作或官方背书关系。</p>
+    </footer>
+  </main>
+</body>
+</html>

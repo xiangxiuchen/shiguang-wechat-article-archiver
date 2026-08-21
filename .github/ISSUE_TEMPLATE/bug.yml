@@ -1,0 +1,54 @@
+name: 功能缺陷
+description: 报告可以稳定复现的识别、保存、打开或跨平台问题
+title: "[缺陷] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: 请先点击扩展中的“复制安全反馈”。不要提交文章正文、完整链接、Cookie、账号信息或本地路径。
+  - type: input
+    id: version
+    attributes:
+      label: 拾光存档版本
+      placeholder: 例如 0.4.0
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: 系统与浏览器
+      placeholder: 例如 Windows 11 / Edge 140
+    validations:
+      required: true
+  - type: textarea
+    id: safe_feedback
+    attributes:
+      label: 安全反馈信息
+      description: 粘贴扩展生成的白名单诊断信息；请再次确认不含文章或链接。
+  - type: textarea
+    id: steps
+    attributes:
+      label: 最小复现步骤
+    validations:
+      required: true
+  - type: dropdown
+    id: article_type
+    attributes:
+      label: 文章类型
+      options:
+        - 普通图文
+        - 长图文或多图
+        - 纯图片
+        - 动图
+        - 音视频或互动内容
+        - 非文章页
+        - 不确定
+    validations:
+      required: true
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: 隐私与权利确认
+      options:
+        - label: 我确认提交内容已脱敏，不含文章正文、完整链接、Cookie、账号、访问令牌或本地路径。
+          required: true

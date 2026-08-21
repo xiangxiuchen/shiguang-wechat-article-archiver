@@ -1,0 +1,22 @@
+<!doctype html>
+<!-- SPDX-License-Identifier: MPL-2.0 -->
+<html lang="zh-CN">
+<head><meta charset="utf-8"><title>特殊结构夹具</title></head>
+<body>
+  <h1 id="activity-name">特殊结构正文测试</h1>
+  <a id="js_name">拾光测试号</a>
+  <div id="js_content">
+    <p>应保留的正文开头</p>
+    <form action="https://evil.test/submit">
+      <label>表单里的文字<input name="secret" value="不可保留"></label>
+      <img src="https://mmbiz.qpic.cn/orphan-in-form.png" alt="表单内孤儿图片">
+    </form>
+    <template><p>模板里的隐藏正文</p><img src="https://mmbiz.qpic.cn/orphan-in-template.png" alt="模板内孤儿图片"></template>
+    <noscript><p>无脚本正文</p></noscript>
+    <select><option>选择项正文</option></select>
+    <textarea>文本框正文</textarea>
+    <p>应保留的正文结尾</p>
+    <img src="https://mmbiz.qpic.cn/kept.png" alt="应保留图片">
+  </div>
+</body>
+</html>

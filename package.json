@@ -1,0 +1,30 @@
+{
+  "name": "shiguang-archive-extension",
+  "version": "0.4.0",
+  "private": true,
+  "type": "module",
+  "description": "拾光存档 Chrome/Edge Manifest V3 扩展",
+  "license": "MPL-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xiangxiuchen/拾光存档-微信文章下载器.git"
+  },
+  "homepage": "https://github.com/xiangxiuchen/拾光存档-微信文章下载器#readme",
+  "bugs": {
+    "url": "https://github.com/xiangxiuchen/拾光存档-微信文章下载器/issues"
+  },
+  "scripts": {
+    "test": "node --test tests/unit/*.test.mjs tests/contract/*.test.mjs",
+    "test:browser": "npm run build && node --test --test-concurrency=1 tests/browser/*.test.mjs tests/e2e/*.test.mjs",
+    "test:release": "node --test tests/release/*.test.mjs",
+    "check:version": "node tools/version.mjs",
+    "build": "node tools/build.mjs",
+    "release": "node tools/release.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "playwright": "1.62.1"
+  }
+}

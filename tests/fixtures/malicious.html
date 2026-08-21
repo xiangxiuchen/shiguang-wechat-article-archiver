@@ -1,0 +1,21 @@
+<!doctype html>
+<!-- SPDX-License-Identifier: MPL-2.0 -->
+<html lang="zh-CN">
+<head><meta charset="utf-8"><title>危险夹具</title></head>
+<body>
+  <h1 id="activity-name">危险 &lt;文章&gt;</h1>
+  <a id="js_name">安全测试号</a>
+  <div id="js_content">
+    <script>globalThis.__executed = true</script>
+    <style>body{background:url(https://evil.test/track)}</style>
+    <p onclick="globalThis.__clicked=true" style="position:fixed;background:url(javascript:alert(1));color:red">安全正文</p>
+    <a href="javascript:alert(1)" ping="https://evil.test/ping">危险链接</a>
+    <a href="http://example.com/insecure">不安全 HTTP 链接</a>
+    <iframe srcdoc="<script>alert(1)</script>"></iframe>
+    <form action="https://evil.test"><input name="secret"></form>
+    <svg onload="alert(1)"><script>alert(1)</script></svg>
+    <img src="https://evil.test/remote.png" onerror="alert(1)" alt="外部图片">
+    <video src="https://evil.test/video.mp4"></video>
+  </div>
+</body>
+</html>
