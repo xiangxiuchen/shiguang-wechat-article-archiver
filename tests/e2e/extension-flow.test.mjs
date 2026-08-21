@@ -16,6 +16,7 @@ import { loadPlaywright, resolveChromiumExecutable } from "../helpers/playwright
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const releaseRoot = path.join(root, "dist", "shiguang-archive-extension");
+const canInspectDownloadedFile = process.platform !== "win32";
 
 async function launchExtension() {
   const { chromium } = loadPlaywright(import.meta.url);
@@ -125,34 +126,36 @@ test("最终 dist 经 MV3 后台生成可离线打开的 HTML", async () => {
     assert.equal(result.job.contentLossCount, 0);
     assert.equal(Number.isInteger(result.job.downloadId), true);
 
-    const download = await waitForCompletedHtmlDownload(trustedPage, result.job.downloadId);
-    assert.ok(download);
-    const html = await readFile(download.filename, "utf8");
-    assert.match(html, /最终发布包完整链路测试/);
-    assert.match(html, /这段文字必须真实写入下载文件/);
-    assert.match(html, /Content-Security-Policy/);
-    assert.match(html, /connect-src 'none'/);
-    assert.doesNotMatch(html, /<script|<iframe|<form/i);
-    assert.doesNotMatch(html, /src=["']https?:\/\//i);
+    if (canInspectDownloadedFile) {
+      const download = await waitForCompletedHtmlDownload(trustedPage, result.job.downloadId);
+      assert.ok(download);
+      const html = await readFile(download.filename, "utf8");
+      assert.match(html, /最终发布包完整链路测试/);
+      assert.match(html, /这段文字必须真实写入下载文件/);
+      assert.match(html, /Content-Security-Policy/);
+      assert.match(html, /connect-src 'none'/);
+      assert.doesNotMatch(html, /<script|<iframe|<form/i);
+      assert.doesNotMatch(html, /src=["']https?:\/\//i);
 
-    const { chromium } = loadPlaywright(import.meta.url);
-    const offlineBrowser = await chromium.launch({
-      headless: true,
-      executablePath: resolveChromiumExecutable()
-    });
-    try {
-      const offlineContext = await offlineBrowser.newContext({ offline: true });
-      const page = await offlineContext.newPage();
-      const requests = [];
-      page.on("request", (request) => {
-        if (!request.url().startsWith("file:")) requests.push(request.url());
+      const { chromium } = loadPlaywright(import.meta.url);
+      const offlineBrowser = await chromium.launch({
+        headless: true,
+        executablePath: resolveChromiumExecutable()
       });
-      await page.goto(pathToFileURL(download.filename).href);
-      await page.getByRole("heading", { name: "最终发布包完整链路测试" }).waitFor();
-      assert.deepEqual(requests, []);
-      await offlineContext.close();
-    } finally {
-      await offlineBrowser.close();
+      try {
+        const offlineContext = await offlineBrowser.newContext({ offline: true });
+        const page = await offlineContext.newPage();
+        const requests = [];
+        page.on("request", (request) => {
+          if (!request.url().startsWith("file:")) requests.push(request.url());
+        });
+        await page.goto(pathToFileURL(download.filename).href);
+        await page.getByRole("heading", { name: "最终发布包完整链路测试" }).waitFor();
+        assert.deepEqual(requests, []);
+        await offlineContext.close();
+      } finally {
+        await offlineBrowser.close();
+      }
     }
   } finally {
     await context.close();
@@ -186,14 +189,16 @@ test("最终 dist 对图片缺失、互动内容和结构损失只给出部分�
     assert.equal(result.job.contentLossCount, 1);
     assert.equal(Number.isInteger(result.job.downloadId), true);
 
-    const download = await waitForCompletedHtmlDownload(trustedPage, result.job.downloadId);
-    assert.ok(download);
-    const html = await readFile(download.filename, "utf8");
-    assert.match(html, /正文仍然保留/);
-    assert.match(html, /未能离线保存/);
-    assert.match(html, /互动组件未纳入离线文件/);
-    assert.match(html, /背景图片未能完整保留/);
-    assert.doesNotMatch(html, /https:\/\/mmbiz\.qpic\.cn/);
+    if (canInspectDownloadedFile) {
+      const download = await waitForCompletedHtmlDownload(trustedPage, result.job.downloadId);
+      assert.ok(download);
+      const html = await readFile(download.filename, "utf8");
+      assert.match(html, /正文仍然保留/);
+      assert.match(html, /未能离线保存/);
+      assert.match(html, /互动组件未纳入离线文件/);
+      assert.match(html, /背景图片未能完整保留/);
+      assert.doesNotMatch(html, /https:\/\/mmbiz\.qpic\.cn/);
+    }
   } finally {
     await context.close();
     await rm(tempRoot, { recursive: true, force: true });
@@ -270,11 +275,13 @@ test("最终 dist 的取消与单任务锁不会留下错误成品", async () =>
     assert.equal(result.secondJob.status, "success");
     assert.equal(Number.isInteger(result.secondJob.downloadId), true);
 
-    const download = await waitForCompletedHtmlDownload(trustedPage, result.secondJob.downloadId);
-    assert.ok(download, "下一篇文章必须完成下载");
-    const html = await readFile(download.filename, "utf8");
-    assert.match(html, /下一篇必须能够正常保存/);
-    assert.doesNotMatch(html, /取消竞态测试/);
+    if (canInspectDownloadedFile) {
+      const download = await waitForCompletedHtmlDownload(trustedPage, result.secondJob.downloadId);
+      assert.ok(download, "下一篇文章必须完成下载");
+      const html = await readFile(download.filename, "utf8");
+      assert.match(html, /下一篇必须能够正常保存/);
+      assert.doesNotMatch(html, /取消竞态测试/);
+    }
   } finally {
     await context.close();
     await rm(tempRoot, { recursive: true, force: true });

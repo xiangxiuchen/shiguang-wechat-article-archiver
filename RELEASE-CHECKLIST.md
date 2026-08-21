@@ -45,6 +45,8 @@
 
 ## P1：Windows 与 Edge 跨平台声明前
 
+GitHub Actions 的 Windows 无界面 Chrome 会验证扩展加载、下载完成事件、成功/部分成功、取消和单任务锁；该环境不向测试页重新暴露已完成文件，因此不能替代真实 Windows 桌面的文件保存和打开验收。
+
 - [ ] Chrome / Windows：使用最终 ZIP 完成与 macOS Chrome 相同的真实文章矩阵。
 - [ ] Edge / Windows：使用最终 ZIP 完成与 macOS Chrome 相同的真实文章矩阵。
 - [ ] Edge / macOS：使用最终 ZIP 完成与 macOS Chrome 相同的真实文章矩阵。
