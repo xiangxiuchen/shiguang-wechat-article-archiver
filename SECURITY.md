@@ -6,7 +6,7 @@
 
 ## 私密报告漏洞
 
-请优先使用 GitHub 仓库的 [Security → Report a vulnerability](https://github.com/xiangxiuchen/拾光存档-微信文章下载器/security/advisories/new) 私密报告入口。不要在公开 Issue 中披露可执行载荷、绕过方法、真实文章、Cookie、账号信息、下载路径或其他个人数据。
+请优先使用 GitHub 仓库的 [Security → Report a vulnerability](https://github.com/xiangxiuchen/shiguang-wechat-article-archiver/security/advisories/new) 私密报告入口。不要在公开 Issue 中披露可执行载荷、绕过方法、真实文章、Cookie、账号信息、下载路径或其他个人数据。
 
 报告建议包含：
 

@@ -2,7 +2,7 @@
 
 把当前公开公众号文章保存成可离线打开的单文件 HTML。
 
-[项目主页](https://github.com/xiangxiuchen/拾光存档-微信文章下载器) · [问题反馈](https://github.com/xiangxiuchen/拾光存档-微信文章下载器/issues) · [MPL-2.0](./LICENSE.md)
+[项目主页](https://github.com/xiangxiuchen/shiguang-wechat-article-archiver) · [问题反馈](https://github.com/xiangxiuchen/shiguang-wechat-article-archiver/issues) · [MPL-2.0](./LICENSE.md)
 
 ## 这版的边界
 
@@ -98,7 +98,7 @@ npm run release
 
 项目源代码以 MPL-2.0 提供。修改并分发包含本项目代码的文件时，应继续按 MPL-2.0 提供相应源代码和许可证通知。项目名称、图标以及用户保存的文章内容不因代码开源而自动获得授权。
 
-普通问题通过 [GitHub Issues](https://github.com/xiangxiuchen/拾光存档-微信文章下载器/issues) 跟踪，安全漏洞通过 [GitHub Private Vulnerability Reporting](https://github.com/xiangxiuchen/拾光存档-微信文章下载器/security/advisories/new) 私密提交。公开商店发布前仍需完成商店资料和真实跨平台验收。
+普通问题通过 [GitHub Issues](https://github.com/xiangxiuchen/shiguang-wechat-article-archiver/issues) 跟踪，安全漏洞通过 [GitHub Private Vulnerability Reporting](https://github.com/xiangxiuchen/shiguang-wechat-article-archiver/security/advisories/new) 私密提交。公开商店发布前仍需完成商店资料和真实跨平台验收。
 
 ## 非官方声明与使用边界
 

@@ -11,7 +11,7 @@
 
 ## 如何反馈
 
-普通缺陷与功能建议请使用 [GitHub Issues](https://github.com/xiangxiuchen/拾光存档-微信文章下载器/issues)；安全漏洞按 `SECURITY.md` 使用私密漏洞报告。项目不承诺固定响应时限。
+普通缺陷与功能建议请使用 [GitHub Issues](https://github.com/xiangxiuchen/shiguang-wechat-article-archiver/issues)；安全漏洞按 `SECURITY.md` 使用私密漏洞报告。项目不承诺固定响应时限。
 
 优先点击扩展弹窗底部的“复制安全反馈”。它只在本机生成并复制版本、平台、浏览器主版本、状态、阶段、错误编号和计数，不会自动发送，也不包含文章内容、链接、文件名或任务标识。若浏览器不允许自动复制，弹窗会显示一段可手动全选的文本。
 

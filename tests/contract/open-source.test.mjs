@@ -38,7 +38,7 @@ test("开发依赖有精确锁定且不进入运行时依赖", async () => {
   const lock = JSON.parse(await readFile(path.join(root, "package-lock.json"), "utf8"));
   assert.equal(packageJson.license, "MPL-2.0");
   assert.equal(packageJson.private, true, "防止误发 npm；不影响 GitHub 开源");
-  assert.equal(packageJson.repository.url, "git+https://github.com/xiangxiuchen/拾光存档-微信文章下载器.git");
+  assert.equal(packageJson.repository.url, "git+https://github.com/xiangxiuchen/shiguang-wechat-article-archiver.git");
   assert.equal(packageJson.dependencies, undefined);
   assert.equal(packageJson.devDependencies.playwright, "1.62.1");
   assert.equal(lock.packages["node_modules/playwright"].version, "1.62.1");

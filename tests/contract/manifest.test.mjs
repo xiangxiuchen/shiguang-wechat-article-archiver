@@ -13,7 +13,7 @@ test("Manifest V3 使用最小权限", () => {
   assert.equal(manifest.manifest_version, 3);
   assert.deepEqual(manifest.permissions, ["activeTab", "scripting", "downloads", "downloads.open", "offscreen"]);
   assert.equal(manifest.minimum_chrome_version, "123");
-  assert.equal(manifest.homepage_url, "https://github.com/xiangxiuchen/拾光存档-微信文章下载器");
+  assert.equal(manifest.homepage_url, "https://github.com/xiangxiuchen/shiguang-wechat-article-archiver");
   assert.deepEqual(manifest.optional_host_permissions, ["https://mmbiz.qpic.cn/*"]);
   for (const forbidden of ["tabs", "cookies", "history", "webRequest", "nativeMessaging", "unlimitedStorage", "<all_urls>"]) {
     assert.ok(!JSON.stringify(manifest).includes(`"${forbidden}"`), `不应包含 ${forbidden}`);

@@ -7,11 +7,11 @@
   "license": "MPL-2.0",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/xiangxiuchen/拾光存档-微信文章下载器.git"
+    "url": "git+https://github.com/xiangxiuchen/shiguang-wechat-article-archiver.git"
   },
-  "homepage": "https://github.com/xiangxiuchen/拾光存档-微信文章下载器#readme",
+  "homepage": "https://github.com/xiangxiuchen/shiguang-wechat-article-archiver#readme",
   "bugs": {
-    "url": "https://github.com/xiangxiuchen/拾光存档-微信文章下载器/issues"
+    "url": "https://github.com/xiangxiuchen/shiguang-wechat-article-archiver/issues"
   },
   "scripts": {
     "test": "node --test tests/unit/*.test.mjs tests/contract/*.test.mjs",
