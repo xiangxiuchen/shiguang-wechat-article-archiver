@@ -5,14 +5,13 @@ import assert from "node:assert/strict";
 import {
   mkdir,
   mkdtemp,
-  readdir,
   readFile,
   rm,
   writeFile
 } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { loadPlaywright, resolveChromiumExecutable } from "../helpers/playwright.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
@@ -60,16 +59,21 @@ async function launchExtension() {
   const extensionId = new URL(worker.url()).hostname;
   const trustedPage = await context.newPage();
   await trustedPage.goto(`chrome-extension://${extensionId}/pages/privacy.html`);
-  return { context, tempRoot, downloadDir, extensionId, trustedPage };
+  return { context, tempRoot, extensionId, trustedPage };
 }
 
-async function waitForHtmlFiles(downloadDir, expectedCount, timeoutMs = 5_000) {
-  const deadline = Date.now() + timeoutMs;
-  while (true) {
-    const files = (await readdir(downloadDir)).filter((name) => name.endsWith(".html"));
-    if (files.length === expectedCount || Date.now() >= deadline) return files;
-    await new Promise((resolve) => setTimeout(resolve, 50));
-  }
+async function waitForCompletedHtmlDownloads(page, expectedCount, timeoutMs = 10_000) {
+  return page.evaluate(async ({ expectedCount, timeoutMs }) => {
+    const deadline = Date.now() + timeoutMs;
+    while (true) {
+      const downloads = await chrome.downloads.search({});
+      const completed = downloads
+        .filter((item) => item.state === "complete" && /\.html$/i.test(item.filename || ""))
+        .map((item) => ({ id: item.id, filename: item.filename }));
+      if (completed.length === expectedCount || Date.now() >= deadline) return completed;
+      await new Promise((resolve) => setTimeout(resolve, 50));
+    }
+  }, { expectedCount, timeoutMs });
 }
 
 async function startAndWait(page, article, timeoutMs = 20_000) {
@@ -112,7 +116,7 @@ function basicArticle(overrides = {}) {
 }
 
 test("最终 dist 经 MV3 后台生成可离线打开的 HTML", async () => {
-  const { context, tempRoot, downloadDir, trustedPage } = await launchExtension();
+  const { context, tempRoot, trustedPage } = await launchExtension();
   try {
     const result = await startAndWait(trustedPage, basicArticle());
     assert.equal(result.start.ok, true);
@@ -120,9 +124,9 @@ test("最终 dist 经 MV3 后台生成可离线打开的 HTML", async () => {
     assert.equal(result.job.failedImages, 0);
     assert.equal(result.job.contentLossCount, 0);
 
-    const files = await waitForHtmlFiles(downloadDir, 1);
-    assert.equal(files.length, 1);
-    const html = await readFile(path.join(downloadDir, files[0]), "utf8");
+    const downloads = await waitForCompletedHtmlDownloads(trustedPage, 1);
+    assert.equal(downloads.length, 1);
+    const html = await readFile(downloads[0].filename, "utf8");
     assert.match(html, /最终发布包完整链路测试/);
     assert.match(html, /这段文字必须真实写入下载文件/);
     assert.match(html, /Content-Security-Policy/);
@@ -142,7 +146,7 @@ test("最终 dist 经 MV3 后台生成可离线打开的 HTML", async () => {
       page.on("request", (request) => {
         if (!request.url().startsWith("file:")) requests.push(request.url());
       });
-      await page.goto(new URL(`file://${path.join(downloadDir, files[0])}`).href);
+      await page.goto(pathToFileURL(downloads[0].filename).href);
       await page.getByRole("heading", { name: "最终发布包完整链路测试" }).waitFor();
       assert.deepEqual(requests, []);
       await offlineContext.close();
@@ -156,7 +160,7 @@ test("最终 dist 经 MV3 后台生成可离线打开的 HTML", async () => {
 });
 
 test("最终 dist 对图片缺失、互动内容和结构损失只给出部分成功", async () => {
-  const { context, tempRoot, downloadDir, trustedPage } = await launchExtension();
+  const { context, tempRoot, trustedPage } = await launchExtension();
   try {
     const article = basicArticle({
       sourceUrl: "https://mp.weixin.qq.com/s/final-dist-partial",
@@ -180,9 +184,9 @@ test("最终 dist 对图片缺失、互动内容和结构损失只给出部分�
     assert.equal(result.job.unsupportedMediaCount, 1);
     assert.equal(result.job.contentLossCount, 1);
 
-    const files = await waitForHtmlFiles(downloadDir, 1);
-    assert.equal(files.length, 1);
-    const html = await readFile(path.join(downloadDir, files[0]), "utf8");
+    const downloads = await waitForCompletedHtmlDownloads(trustedPage, 1);
+    assert.equal(downloads.length, 1);
+    const html = await readFile(downloads[0].filename, "utf8");
     assert.match(html, /正文仍然保留/);
     assert.match(html, /未能离线保存/);
     assert.match(html, /互动组件未纳入离线文件/);
@@ -195,7 +199,7 @@ test("最终 dist 对图片缺失、互动内容和结构损失只给出部分�
 });
 
 test("最终 dist 的取消与单任务锁不会留下错误成品", async () => {
-  const { context, tempRoot, downloadDir, trustedPage } = await launchExtension();
+  const { context, tempRoot, trustedPage } = await launchExtension();
   try {
     const result = await trustedPage.evaluate(async () => {
       const articleA = {
@@ -262,9 +266,9 @@ test("最终 dist 的取消与单任务锁不会留下错误成品", async () =>
     assert.equal(result.second.ok, true);
     assert.equal(result.secondJob.status, "success");
 
-    const files = await waitForHtmlFiles(downloadDir, 1);
-    assert.equal(files.length, 1, "取消的文章不得留下 HTML");
-    const html = await readFile(path.join(downloadDir, files[0]), "utf8");
+    const downloads = await waitForCompletedHtmlDownloads(trustedPage, 1);
+    assert.equal(downloads.length, 1, "取消的文章不得留下 HTML");
+    const html = await readFile(downloads[0].filename, "utf8");
     assert.match(html, /下一篇必须能够正常保存/);
     assert.doesNotMatch(html, /取消竞态测试/);
   } finally {
